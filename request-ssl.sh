@@ -29,13 +29,17 @@ export AWS_SECRET_ACCESS_KEY=`cat /tmp/aws.keys | jq -j '.SecretAccessKey'`
 export AWS_SESSION_TOKEN=`cat /tmp/aws.keys | jq -j '.Token'`
 rm /tmp/aws.keys
 
-# curl -s https://get.acme.sh | sh
-# https://github.com/Neilpang/acme.sh/issues/453
-git clone git@github.com:AntonTimiskov/acme.sh.git ~/.acme.sh
+if [ ! -d "$HOME/.acme.sh" ]; then
+  # curl -s https://get.acme.sh | sh
+  # https://github.com/Neilpang/acme.sh/issues/453
+  git clone git@github.com:AntonTimiskov/acme.sh.git ~/.acme.sh
+fi
+
+echo "ACCOUNT_EMAIL=$EMAIL\n" >> ~/.acme.sh/account.conf
 
 aws s3 sync $S3_STORE/$DOMAIN/ ~/.acme.sh/$DOMAIN/ 
 
-~/.acme.sh/acme.sh --issue --dns dns_aws --debug -d $DOMAIN
+~/.acme.sh/acme.sh --issue --dns dns_aws -d $DOMAIN # --debug
 
 cp ~/.acme.sh/$DOMAIN/fullchain.cer ~/.acme.sh/$DOMAIN/fullchain.pem
 cp ~/.acme.sh/$DOMAIN/$DOMAIN.key ~/.acme.sh/$DOMAIN/privkey.pem
