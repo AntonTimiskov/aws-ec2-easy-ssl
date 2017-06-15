@@ -32,7 +32,7 @@ rm /tmp/aws.keys
 if [ ! -d "$HOME/.acme.sh" ]; then
   # curl -s https://get.acme.sh | sh
   # https://github.com/Neilpang/acme.sh/issues/453
-  git clone git@github.com:AntonTimiskov/acme.sh.git ~/.acme.sh
+  git clone https://github.com/AntonTimiskov/acme.sh ~/.acme.sh
 fi
 
 echo "ACCOUNT_EMAIL=$EMAIL\n" >> ~/.acme.sh/account.conf
