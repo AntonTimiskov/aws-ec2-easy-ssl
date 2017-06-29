@@ -36,7 +36,7 @@ if [ ! -d "$HOME/.acme.sh" ]; then
   git clone https://github.com/AntonTimiskov/acme.sh ~/.acme.sh
 fi
 
-echo "ACCOUNT_EMAIL=$EMAIL\n" >> ~/.acme.sh/account.conf
+echo "ACCOUNT_EMAIL=$EMAIL\n" > ~/.acme.sh/account.conf
 
 aws s3 sync $S3_STORE/$DOMAIN/ ~/.acme.sh/$DOMAIN/ 
 
