@@ -21,13 +21,14 @@ DOMAIN=$1
 EMAIL=$2
 S3_STORE=$3
 
-
-ROLE=`curl -s http://169.254.169.254/latest/meta-data/iam/security-credentials/`
-curl -s "http://169.254.169.254/latest/meta-data/iam/security-credentials/$ROLE" > /tmp/aws.keys
-export AWS_ACCESS_KEY_ID=`cat /tmp/aws.keys | jq -j '.AccessKeyId'`
-export AWS_SECRET_ACCESS_KEY=`cat /tmp/aws.keys | jq -j '.SecretAccessKey'`
-export AWS_SESSION_TOKEN=`cat /tmp/aws.keys | jq -j '.Token'`
-rm /tmp/aws.keys
+if [ -e $AWS_ACCESS_KEY_ID ] || [ -e $AWS_SECRET_ACCESS_KEY ]; then
+    ROLE=`curl -s http://169.254.169.254/latest/meta-data/iam/security-credentials/`
+    curl -s "http://169.254.169.254/latest/meta-data/iam/security-credentials/$ROLE" > /tmp/aws.keys
+    export AWS_ACCESS_KEY_ID=`cat /tmp/aws.keys | jq -j '.AccessKeyId'`
+    export AWS_SECRET_ACCESS_KEY=`cat /tmp/aws.keys | jq -j '.SecretAccessKey'`
+    export AWS_SESSION_TOKEN=`cat /tmp/aws.keys | jq -j '.Token'`
+    rm /tmp/aws.keys
+fi
 
 if [ ! -d "$HOME/.acme.sh" ]; then
   # curl -s https://get.acme.sh | sh
